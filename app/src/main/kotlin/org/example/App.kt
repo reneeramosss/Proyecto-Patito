@@ -15,14 +15,14 @@ fun probar(nombre: String, codigo: String, esperaValido: Boolean) {
     var errores = 0
     val errorListener = object : BaseErrorListener() {
         override fun syntaxError(
-            recognizer: Recognizer<*, *>?,
-            offendingSymbol: Any?,
-            line: Int,
-            charPositionInLine: Int,
-            msg: String?,
-            e: RecognitionException?
+            recognizer: Recognizer<*, *>?, // quien detecta el error (lexer o parser)
+            offendingSymbol: Any?, // el token que causó el error
+            line: Int, // número de línea donde ocurrió el error
+            charPositionInLine: Int, // posición del error en la línea
+            msg: String?, // mensaje de error generado por ANTLR4
+            e: RecognitionException? // excepción que se lanzó (puede ser null)
         ) {
-            errores++
+            errores++ 
             println("  [ERROR] línea $line:$charPositionInLine — $msg")
         }
     }
@@ -34,6 +34,24 @@ fun probar(nombre: String, codigo: String, esperaValido: Boolean) {
     val valido = errores == 0
     val resultado = if (valido == esperaValido) "PASS" else "FAIL"
     println("$resultado — $nombre")
+    
+}
+fun analizarSemantica(nombre: String, codigo: String) {
+    println("\n$nombre")
+    println("─".repeat(40))
+
+    val input  = CharStreams.fromString(codigo)
+    val lexer  = PatitoLexer(input)
+    val tokens = CommonTokenStream(lexer)
+    val parser = PatitoParser(tokens)
+
+    parser.removeErrorListeners()
+    lexer.removeErrorListeners()
+
+    val tree = parser.programa()
+    val analizador = AnalizadorSemantico()
+    analizador.visit(tree)
+    analizador.directorio.imprimir()
 }
 
 fun main() {
@@ -186,4 +204,25 @@ fun main() {
             x = 5 % 2; // El operador % no está definido en el lenguaje
         fin
     """.trimIndent(), false)
+
+    // ── Pruebas semánticas ──────────────────────────────────────
+
+    analizarSemantica("Semántica TC-01 — Programa simple", """
+        programa miProg;
+        vars
+            x, y : entero; 
+            pi   : flotante; 
+        inicio
+            x = 5; // Asignación de un valor entero a x
+        fin
+    """.trimIndent()) 
+
+    analizarSemantica("Semántica TC-02 — Variable doblemente declarada", """
+        programa error;
+        vars
+            x : entero;
+            x : flotante;
+        inicio
+        fin
+    """.trimIndent())
 }
