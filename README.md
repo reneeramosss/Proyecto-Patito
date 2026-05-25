@@ -5,6 +5,7 @@ Proyecto de compilador para el lenguaje Patito desarrollado con Kotlin y ANTLR4.
 **TC3002B | María Renée Ramos Valdez | A01252966**
 
 ## Requisitos
+
 - Kotlin 2.3.21
 - Gradle 9.5.0
 - Java (OpenJDK 25)
@@ -12,18 +13,28 @@ Proyecto de compilador para el lenguaje Patito desarrollado con Kotlin y ANTLR4.
 ## Cómo ejecutar
 
 1. Entrar a la carpeta del proyecto:
-cd patito-compiler
+   ```bash
+   cd patito-compiler
+   ```
 
 2. Configurar Java:
-export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+   ```bash
+   export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+   ```
 
 3. Generar el Scanner y Parser:
-./gradlew generateGrammarSource
+   ```bash
+   ./gradlew generateGrammarSource
+   ```
 
 4. Ejecutar los test cases:
-./gradlew run
+   ```bash
+   ./gradlew run
+   ```
 
 ## Resultado esperado
+
+```
 === TEST CASES PATITO ===
 PASS — TC-01 Programa mínimo
 PASS — TC-02 Una variable
@@ -38,6 +49,7 @@ PASS — TC-10 Falta corchete de cierre
 PASS — TC-11 Palabra reservada como nombre
 PASS — TC-12 Falta inicio
 PASS — TC-13 Operador inválido
+```
 
 ## Etapa 2: Análisis Semántico
 
@@ -78,6 +90,8 @@ Modificado:
 - `analizadorSemantico.kt` — Se agregaron visitFactor, visitTermino, visitExp, visitExpresion, visitAsigna, visitImprime, visitCondicion y visitCiclo para generar cuádruplos
 
 ### Resultado esperado Etapa 3
+
+```
 CQ-01 Suma simple
 ────────────────────────────────────────
 === CUÁDRUPLOS ===
@@ -85,6 +99,7 @@ CQ-01 Suma simple
 1: (=, 4, _, y)
 2: (+, x, y, t1)
 3: (=, t1, _, z)
+
 CQ-02 Multiplicación y suma mixta
 ────────────────────────────────────────
 === CUÁDRUPLOS ===
@@ -95,6 +110,7 @@ CQ-02 Multiplicación y suma mixta
 4: (=, t2, _, resultado)
 5: (PRINT, "El resultado es: ", _, _)
 6: (PRINT, resultado, _, _)
+
 CQ-03 Expresión relacional
 ────────────────────────────────────────
 === CUÁDRUPLOS ===
@@ -102,6 +118,7 @@ CQ-03 Expresión relacional
 1: (=, 10, _, y)
 2: (<, x, y, t1)
 3: (PRINT, t1, _, _)
+
 CQ-04 Expresión con paréntesis
 ────────────────────────────────────────
 === CUÁDRUPLOS ===
@@ -113,3 +130,4 @@ CQ-04 Expresión con paréntesis
 5: (=, t2, _, resultado)
 6: (PRINT, "El resultado es: ", _, _)
 7: (PRINT, resultado, _, _)
+```
