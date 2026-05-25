@@ -68,3 +68,48 @@ Semántica TC-02 — Variable doblemente declarada
 ────────────────────────────────────────
 [ERROR] Variable 'x' ya fue declarada en 'error'
 ```
+
+## Etapa 3: Generación de Cuádruplos
+
+Archivos nuevos:
+- `Estructuras.kt` — Cuádruplo, PilaOperandos, PilaTipos, PilaOperadores, ListaCuadruplos
+
+Modificado:
+- `analizadorSemantico.kt` — Se agregaron visitFactor, visitTermino, visitExp, visitExpresion, visitAsigna, visitImprime, visitCondicion y visitCiclo para generar cuádruplos
+
+### Resultado esperado Etapa 3
+CQ-01 Suma simple
+────────────────────────────────────────
+=== CUÁDRUPLOS ===
+0: (=, 3, _, x)
+1: (=, 4, _, y)
+2: (+, x, y, t1)
+3: (=, t1, _, z)
+CQ-02 Multiplicación y suma mixta
+────────────────────────────────────────
+=== CUÁDRUPLOS ===
+0: (=, 10, _, a)
+1: (=, 3, _, b)
+2: (*, a, b, t1)
+3: (+, t1, 2.5, t2)
+4: (=, t2, _, resultado)
+5: (PRINT, "El resultado es: ", _, _)
+6: (PRINT, resultado, _, _)
+CQ-03 Expresión relacional
+────────────────────────────────────────
+=== CUÁDRUPLOS ===
+0: (=, 5, _, x)
+1: (=, 10, _, y)
+2: (<, x, y, t1)
+3: (PRINT, t1, _, _)
+CQ-04 Expresión con paréntesis
+────────────────────────────────────────
+=== CUÁDRUPLOS ===
+0: (=, 2, _, a)
+1: (=, 3, _, b)
+2: (=, 4, _, c)
+3: (*, b, c, t1)
+4: (+, a, t1, t2)
+5: (=, t2, _, resultado)
+6: (PRINT, "El resultado es: ", _, _)
+7: (PRINT, resultado, _, _)

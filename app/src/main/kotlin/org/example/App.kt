@@ -53,6 +53,24 @@ fun analizarSemantica(nombre: String, codigo: String) {
     analizador.visit(tree)
     analizador.directorio.imprimir()
 }
+fun generarCuadruplos(nombre: String, codigo: String) {
+    println("\n$nombre")
+    println("─".repeat(40))
+
+    val input  = CharStreams.fromString(codigo) //secuencia de caracteres que el lexer de ANTLR puede leer uno a uno para generar tokens.
+    val lexer  = PatitoLexer(input) 
+    val tokens = CommonTokenStream(lexer)
+    val parser = PatitoParser(tokens)
+
+    //quita los listeners de errores por defecto de ANTLR4 
+    parser.removeErrorListeners() 
+    lexer.removeErrorListeners()
+
+    val tree       = parser.programa() //inicia el análisis sintáctico a partir del nodo raíz "programa" de la gramática, y construye el árbol de análisis sintáctico (parse tree)
+    val analizador = AnalizadorSemantico() // Crea el analizador y recorre el árbol. utiliza las funciones de AnalizadorSemantico()
+    analizador.visit(tree)
+    analizador.cuadruplos.imprimir()
+}
 
 fun main() {
     println("=== TEST CASES PATITO ===\n")
@@ -225,4 +243,83 @@ fun main() {
         inicio
         fin
     """.trimIndent())
+
+    generarCuadruplos("CQ-01 Suma simple", """
+        programa suma;
+        vars
+            x, y, z : entero;
+        inicio
+            x = 3;
+            y = 4;
+            z = x + y;
+        fin
+    """.trimIndent())
+    
+    generarCuadruplos("CQ-02 Multiplicación y suma mixta", """
+        programa prueba;
+        vars
+            a, b : entero;
+            resultado : flotante;
+        inicio
+            a = 10;
+            b = 3;
+            resultado = a * b + 2.5;
+            escribe("El resultado es: ", resultado);
+        fin
+    """.trimIndent())
+
+    generarCuadruplos("CQ-03 Expresión relacional", """
+        programa comparacion;
+        vars
+            x, y : entero;
+        inicio
+            x = 5;
+            y = 10;
+            escribe(x < y);
+        fin
+    """.trimIndent())
+
+    generarCuadruplos("CQ-04 Expresión con paréntesis", """
+        programa parens;
+        vars
+            a, b, c : entero;
+            resultado : entero;
+        inicio
+            a = 2;
+            b = 3;
+            c = 4;
+            resultado = a + (b * c);
+            escribe("El resultado es: ", resultado);
+        fin
+    """.trimIndent())
+
+        
+/* 
+    generarCuadruplos("CQ-02 Si-sino", """
+        programa siSino;
+        vars
+            x : entero;
+        inicio
+            x = 3;
+            si (x > 5) [
+                escribe("mayor");
+            ] sino [
+                escribe("menor");
+            ]
+        fin
+    """.trimIndent())
+
+    generarCuadruplos("CQ-03 Ciclo mientras", """
+        programa contador;
+        vars
+            i : entero;
+        inicio
+            i = 1;
+            mientras (i < 4) haz [
+                escribe(i);
+                i = i + 1;
+            ]
+        fin
+    """.trimIndent())
+    */
 }
